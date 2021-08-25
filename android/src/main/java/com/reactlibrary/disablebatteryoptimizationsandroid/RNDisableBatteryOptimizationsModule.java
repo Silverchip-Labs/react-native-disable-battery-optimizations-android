@@ -21,19 +21,6 @@ public class RNDisableBatteryOptimizationsModule extends ReactContextBaseJavaMod
     this.reactContext = reactContext;
   }
 
-  @ReactMethod
-  public void openBatteryModal() {
-	  if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-		    String packageName = reactContext.getPackageName();
-			Intent intent = new Intent();
-			intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-			intent.setData(Uri.parse("package:" + packageName));
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			reactContext.startActivity(intent);
-    
-	  }
-
-  }
 
   @ReactMethod
   public void isBatteryOptimizationEnabled(Promise promise) {
@@ -52,18 +39,15 @@ public class RNDisableBatteryOptimizationsModule extends ReactContextBaseJavaMod
 
 
   @ReactMethod
-  public void enableBackgroundServicesDialogue() {
+  public void redirectToBatteryOptimsationSettings() {
     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       Intent myIntent = new Intent();
       String packageName =  reactContext.getPackageName();
       PowerManager pm = (PowerManager) reactContext.getSystemService(reactContext.POWER_SERVICE);
-      if (pm.isIgnoringBatteryOptimizations(packageName))
-        myIntent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
-      else {
-        myIntent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-        myIntent.setData(Uri.parse("package:" + packageName));
-      }
-	  myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      
+      myIntent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+      myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	    
       reactContext.startActivity(myIntent);
     }
   }
