@@ -5,6 +5,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Promise;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.provider.Settings;
 import android.os.PowerManager;
@@ -45,10 +46,16 @@ public class RNDisableBatteryOptimizationsModule extends ReactContextBaseJavaMod
       String packageName =  reactContext.getPackageName();
       PowerManager pm = (PowerManager) reactContext.getSystemService(reactContext.POWER_SERVICE);
       
-      myIntent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
-      myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-	    
-      reactContext.startActivity(myIntent);
+      try {
+        myIntent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+        myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        reactContext.startActivity(myIntent);
+      }
+      catch (ActivityNotFoundException e) {
+        myIntent.setAction(Settings.ACTION_SETTINGS);
+        myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        reactContext.startActivity(myIntent);
+      }
     }
   }
 
